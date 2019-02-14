@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">SMS Retriever</string>
+    <string name="empty">등록한 내용이 없습니다.</string>
+    <string name="sc_title">서비스센터 번호&#160;&#160;:&#160;&#160;</string>
+    <string name="destination_title">목적지 번호&#160;&#160;:&#160;&#160;</string>
 </resources>
