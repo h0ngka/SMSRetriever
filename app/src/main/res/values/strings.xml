@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">SMS Retriever</string>
     <string name="empty">등록한 내용이 없습니다.</string>
-    <string name="sc_title">서비스센터 번호&#160;&#160;:&#160;&#160;</string>
-    <string name="destination_title">목적지 번호&#160;&#160;:&#160;&#160;</string>
+    <string name="sc_title">"""서비스센터 번호  :  """</string>
+    <string name="destination_title">"""목적지 번호  :  """</string>
+    <string name="add">추가</string>
+    <string name="update">업데이트</string>
+    <string name="delete">삭제</string>
+    <string name="service_center_number">서비스 센터</string>
+    <string name="destination_number">목적지 번호</string>
+    <string name="filter_keyword">필터 단어</string>
+
+    <string name="successfully_saved_task_message">TO-DO saved</string>
+    <string name="successfully_deleted_task_message">Task was deleted</string>
+    <string name="successfully_added_task_message">TO-DO added</string>
 </resources>

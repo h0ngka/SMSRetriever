@@ -1,8 +1,10 @@
 package com.hongka.smsretriever.ui.tasks
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -12,7 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.hongka.smsretriever.R
+import com.hongka.smsretriever.data.source.local.ToDoDatabase
 import com.hongka.smsretriever.databinding.ActivityTasksBinding
+import com.hongka.smsretriever.ui.taskdetail.TaskDetailActivity
 import com.hongka.smsretriever.util.PermissionUtil
 
 class TasksActivity : AppCompatActivity() {
@@ -34,9 +38,7 @@ class TasksActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTasksBinding
     private val tasksAdapter: TasksAdapter by lazy {
-        TasksAdapter(
-            this
-        )
+        TasksAdapter(this, viewModel)
     }
     private lateinit var viewModel: TasksViewModel
 
@@ -55,7 +57,13 @@ class TasksActivity : AppCompatActivity() {
         setupViews()
         setupObservers()
 
+        viewModel.setDatabase(application)
         viewModel.loadData()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ToDoDatabase.destroyInstance()
     }
 
     private fun setupViews() {
@@ -68,6 +76,9 @@ class TasksActivity : AppCompatActivity() {
                 }
             }
         )
+        binding.addButton.setOnClickListener {
+            openTaskDetail(null)
+        }
     }
 
     private fun setupObservers() {
@@ -77,6 +88,26 @@ class TasksActivity : AppCompatActivity() {
             binding.recyclerView.isVisible = !it.isEmpty()
             binding.emptyTextView.isVisible = it.isEmpty()
         })
+
+        viewModel.openTaskEvent.observe(this, Observer { taskId ->
+            openTaskDetail(taskId)
+        })
+
+        viewModel.snackbarMessage.observe(this, Observer { resId ->
+            viewModel.loadData()
+            Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+        })
+    }
+
+    private fun openTaskDetail(taskId: String?) {
+        val intent = Intent(this, TaskDetailActivity::class.java).apply {
+            putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId)
+        }
+        startActivityForResult(intent, TaskDetailActivity.REQUEST_CODE)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.handleActivityResult(requestCode, resultCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

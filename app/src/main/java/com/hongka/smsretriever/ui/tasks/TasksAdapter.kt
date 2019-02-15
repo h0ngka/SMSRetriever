@@ -10,9 +10,9 @@ import com.hongka.smsretriever.data.Task
 /**
  * Created by jusung.kim@sk.com on 2019/02/14
  */
-class TasksAdapter(_activity: TasksActivity) : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
+class TasksAdapter(private val activity: TasksActivity,
+                   private val tasksViewModel: TasksViewModel) : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
     private var list = emptyList<Task>()
-    private val activity = _activity
 
     fun setData(_list: List<Task>) {
         list = _list
@@ -24,7 +24,8 @@ class TasksAdapter(_activity: TasksActivity) : RecyclerView.Adapter<TasksAdapter
 
         binding.listener = object : ItemClickListener {
             override fun onItemClicked(model: Task) {
-                Toast.makeText(parent.context, model.scNumber, Toast.LENGTH_SHORT).show()
+                tasksViewModel.openTaskEvent.value = model.taskId
+                Toast.makeText(parent.context, "${model.taskId}, ${model.scNumber}", Toast.LENGTH_SHORT).show()
             }
         }
         binding.lifecycleOwner = activity
