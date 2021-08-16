@@ -37,11 +37,24 @@ class SMSReceiver : BroadcastReceiver() {
                 Log.d(TAG, "contents : $contents")
                 Log.d(TAG, "receivedDate : $receivedDate")
 
+                // 우리카드
                 if (sender == "15889955") {
                     if (contents?.contains("우리(1804)") == true) {
-                        val intent = Intent(context, SMSSenderService::class.java)
-                        intent.putExtra("contents", contents)
-                        context?.startService(intent)
+                        context?.startService(SMSSenderService.makeIntent(context, sender, contents))
+                    }
+                }
+
+                // 신한카드
+                if (sender == "15447200") {
+                    if (contents?.contains("신한카드(1600)") == true) {
+                        context?.startService(SMSSenderService.makeIntent(context, sender, contents))
+                    }
+                }
+
+                // 신한카드
+                if (sender == "01020159625") {
+                    if (contents?.contains("홍카(9625)") == true) {
+                        context?.startService(SMSSenderService.makeIntent(context, sender, contents))
                     }
                 }
             }
